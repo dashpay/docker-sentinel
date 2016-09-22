@@ -11,18 +11,16 @@ services:
       MYSQL_DATABASE: sentinel
       MYSQL_USER: sentinel
       MYSQL_PASSWORD: sentinel
-      
+
   dashd:
-    container_name: sentinel-dashd
     logging:
       driver: none
     image: dashpay/dashd
     volumes:
-      - "./.data/dashd:/dash"
+      - sentinel-dashd-data:/dash
     ports:
       - 9999:9999
     environment:
-      - SERVICE_NAME=sentinel-dashd
       - RPCPASSWORD=bDEgk9YeqEPU9g6hqZFfCd3fHCCD4vQs
 
   sentinel:
@@ -33,3 +31,6 @@ services:
     - dashd
     environment:
     - DEBUG=false
+
+volumes:
+    sentinel-dashd-data:  #declare a volume named sentinel-dashd-data
