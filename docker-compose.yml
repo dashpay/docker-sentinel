@@ -1,0 +1,35 @@
+version: '2'
+
+services:
+  db:
+    image: mysql:5.7
+    volumes:
+      - "./.data/db:/var/lib/mysql"
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: sentinel
+      MYSQL_DATABASE: sentinel
+      MYSQL_USER: sentinel
+      MYSQL_PASSWORD: sentinel
+      
+  dashd:
+    container_name: sentinel-dashd
+    logging:
+      driver: none
+    image: dashpay/dashd
+    volumes:
+      - "./.data/dashd:/dash"
+    ports:
+      - 9999:9999
+    environment:
+      - SERVICE_NAME=sentinel-dashd
+      - RPCPASSWORD=bDEgk9YeqEPU9g6hqZFfCd3fHCCD4vQs
+
+  sentinel:
+    restart: always
+    image: dashpay/sentinel:latest
+    depends_on:
+    - db
+    - dashd
+    environment:
+    - DEBUG=false
