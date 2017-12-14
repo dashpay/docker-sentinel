@@ -10,6 +10,8 @@ ENV SENTINEL_COMMIT=01ab29702cebb68503dac6f1cda5d33f327ca492
 RUN git clone https://github.com/dashpay/sentinel.git /sentinel && \
     cd /sentinel && \
     git checkout $SENTINEL_COMMIT && \
+    rm sentinel.conf && \
+    rm -rf .git && \
     pip install -r requirements.txt && exit 0
 
 ENV HOME /sentinel
