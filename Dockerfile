@@ -5,7 +5,7 @@ RUN apt-get update && \
     apt-get install git curl mysql-client cython3 -y && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-ENV SENTINEL_COMMIT=01ab29702cebb68503dac6f1cda5d33f327ca492
+ARG SENTINEL_COMMIT=01ab29702cebb68503dac6f1cda5d33f327ca492
 
 RUN git clone https://github.com/dashpay/sentinel.git /sentinel && \
     cd /sentinel && \
