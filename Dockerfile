@@ -1,4 +1,4 @@
-FROM python:3.7-buster
+FROM python:3.7-slim-buster
 MAINTAINER Holger Schinzel <holger@dash.org>
 
 RUN apt-get update && \
