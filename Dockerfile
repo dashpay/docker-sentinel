@@ -7,7 +7,6 @@ RUN apt-get update && \
 
 RUN git clone https://github.com/dashpay/sentinel.git /sentinel && \
     cd /sentinel && \
-    git checkout new-version && \
     rm sentinel.conf && \
     rm -rf .git && \
     pip install -r requirements.txt && exit 0
