@@ -1,5 +1,6 @@
 FROM python:3.8-buster
 MAINTAINER Holger Schinzel <holger@dash.org>
+LABEL org.dash.version="1.4.0"
 
 RUN apt-get update && \
     apt-get install git curl -y && \
