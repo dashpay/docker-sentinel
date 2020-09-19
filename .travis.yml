@@ -1,0 +1,31 @@
+language: bash
+dist: focal
+sudo: required
+
+addons:
+  apt:
+    update: true
+    sources:
+      - sourceline: 'deb https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable'
+
+env:
+  global:
+    - DOCKER_CLI_EXPERIMENTAL=enabled
+    - TAG=1.4.0
+
+before_install:
+  - sudo apt-get -y install docker-ce=5:19.03.13~3-0~ubuntu-focal
+
+install:
+  - docker run --rm --privileged docker/binfmt:a7996909642ee92942dcd6cff44b9b95f08dad64
+  - docker buildx create --name xbuilder --use
+
+before_script:
+  - image="strophy/sentinel:$TAG"
+  - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
+
+script:
+  - docker buildx build --push --platform linux/amd64,linux/arm64,linux/arm/v7 -t "$image" .
+
+after_script:
+  - docker images
