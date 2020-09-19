@@ -20,7 +20,7 @@ install:
   - docker buildx create --name xbuilder --use
 
 before_script:
-  - image="strophy/sentinel:$TAG"
+  - image="dashpay/sentinel:$TAG"
   - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
 
 script:
