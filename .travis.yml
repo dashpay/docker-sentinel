@@ -26,7 +26,7 @@ install:
 
 before_script:
   - image="dashpay/sentinel:$TAG"
-  - docker login -u "$DOCKER_HUB_USER" -p "$DOCKER_HUB_PASSWORD"
+  - docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASSWORD
 
 script:
   - docker buildx build --push --platform linux/amd64,linux/arm64,linux/arm/v7 -t "$image" .
