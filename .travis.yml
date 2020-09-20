@@ -1,0 +1,35 @@
+language: minimal
+os: linux
+dist: focal
+
+addons:
+  apt:
+    update: true
+    sources:
+      - sourceline: 'deb https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable'
+
+env:
+  global:
+    - DOCKER_CLI_EXPERIMENTAL=enabled
+    # DOCKER_HUB_USER
+    - secure: "BdCLAzuk8Oq41MHQZ4BMpWI+iVXMGIYFEASEXTiBtqKEioESW0b22Hb0jya5oJ8M6ILXIeI1P4E4iruA26LlLhz7IsYs7V9YPvSbPpR8+4SdP8U7b4t985Jc5tUpKohucqLs995KoqCKEpLgX0pSVV48tNiCIBUkbKbYklBgLZgXtziNdfbGaRSQvppxPq+883Gs3trKnxuEtJffXieIUOy86sR9C+hrwdkfh+TgkefrF42YcE6C47WQ5Rs6Mae+/6uqZcwHCtVtQlpC4upTcX+mkAjATZNx4YMlK6uLqRnxwB4ZmHX5K2GANr12UHHEDq1hw8ChRrs1MlpD7pF0JhVuqJFUrU4+ebEPUnXZNEhhS2ZPCFQHvTUZr8DuWo0QELUDJUrODef/qpX2B4nmWvFKnMaC0zLUtXTUet0YEeVnaVciG7PUm791jMLUW1JLn29oLITw+i7mdX5y7bxaDuD1HpKnroZGilQpsEl4iIectSa/c4ki3WaNVzEdhUaQjcKdAAEpLP9/WdSBJ2c05hV+pot+rvyII2n9FCK8me35i5UUhf1wATkKulY4XTlkmXmzXB7kHWuSDOsiu7E47wJLx8oDE5fGJpWcY2Okk4rBdwzeHXc9vnAMu+UTBlUCD9bQObZiEigJ84iVRjT0FrpoQJ3bwf+5sueazSGxod4="
+    # DOCKER_HUB_PASSWORD
+    - secure: "RF3r9e4ljVDK4T/53oqgJ6RLDx5OVgs5UKmmnGQ5eOo+rlKhb3U5yTmh49mwXFXrMKBhtLv6nEqEU1TUuvCAeworxnqLx3x87Fn8AmgBn9ZSazHIyeZ9SrhNKPEILHFOuU1YMYwAztPpNNCjYagltgNG6zmJ7w2sJW29rEGExkifQsCVGy+4zBKtChhLKP3C/4ntyrLjN5izAiq+quu1y1XIysIPIU2kszfRKUh+b9FDez8bLgrEhZAhkHcwnDMN5Mpz6jaRaFugzGzFh2aFaI7S+xXsMA0be9iqqHxlLc5qsSjDvnC54ytCJe3CgnfBcxeBN10ZA8qvoR39iqrK2k5T9rmXmWdZbHLsy67hzJvv63N9qGqJB6RsNb04izsrLuhzxRc5dR3v4GsYCK7fjdRZmjsbQM5mISYR3c9vr3t7x5kllwP4AfwWBZIcnJ4ueFDOXvgaD+0s7Cp4+ZRjrgFCcmRCUiwIQvC1WSs8OgbrnF5mEY8NkfXtMz9H1VR4TnU4R4MxoWbo/pEjYEjgzQ8Sya4W5VYkjsycaLgBV2dtYHySDce1iV8ccC77NvcrO1/xsXjchemRmtlan4Sj1NCImEwj6vd5yBKe7UmqyjFOzHQN9mC0rKf4mm1XPI13yD4rafalDG4wD7d/1NOfjIWAArFyFBmaSW+YvCrdhFE="
+
+before_install:
+  - sudo apt-get -y install docker-ce=5:19.03.13~3-0~ubuntu-focal
+  - export TAG=$(curl https://api.github.com/repos/dashpay/sentinel/tags -s | jq .[0].name -r | cut -c2-)
+
+install:
+  - docker run --rm --privileged docker/binfmt:a7996909642ee92942dcd6cff44b9b95f08dad64
+  - docker buildx create --name xbuilder --use
+
+before_script:
+  - image="dashpay/sentinel:$TAG"
+  - docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASSWORD
+
+script:
+  - docker buildx build --push --platform linux/amd64,linux/arm64,linux/arm/v7 -t "$image" .
+
+after_script:
+  - docker images

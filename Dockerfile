@@ -1,5 +1,5 @@
 FROM python:3.8-buster
-MAINTAINER Holger Schinzel <holger@dash.org>
+LABEL maintainer="holger@dash.org,leon.white@dash.org"
 
 RUN apt-get update && \
     apt-get install git curl -y && \
